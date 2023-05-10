@@ -1,22 +1,38 @@
 
-const { response } = require('express');
+const { response, request } = require('express');
 
-const usuariosGet = (req, res = response) => {
+const usuariosGet = (req = request, res = response) => {
     
-    res.json( {
-        msj: 'get API - usuariosGet'
-    } );
-}
+    const { q, nombre = "No name", apikey, page = 1, limit } = req.query;
 
-const usuariosPut = (req, res) => {
-    res.status(500).json( {
-        msj: 'put API - usuariosPut'
+    res.json( {
+        msj: 'get API - usuariosGet',
+        q,
+        nombre,
+        apikey,
+        page,
+        limit
     } );
 }
 
 const usuariosPost = (req, res) => {
-    res.status(201).json( {
-        msj: 'post API - usuariosPost'
+    
+    const { nombre, edad } = req.body;
+    
+    res.json( {
+        msj: 'post API - usuariosPost',
+        nombre,
+        edad
+    } );
+}
+
+const usuariosPut = (req, res) => {
+
+    const id = req.params.id;
+
+    res.json( {
+        msj: 'put API - usuariosPut',
+        id
     } );
 }
 
