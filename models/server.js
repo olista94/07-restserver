@@ -1,5 +1,6 @@
 
 const express = require('express');
+const cors = require('cors');
 
 class Server {
 
@@ -16,35 +17,16 @@ class Server {
 
     middelwares() {
 
+        // CORS
+        this.app.use( cors() );
+
         // Directorio poublico
         this.app.use( express.static('public') )
     }
 
     routes() {
 
-        this.app.get( '/api', (req, res) => {
-            res.json( {
-                msj: 'get API'
-            } );
-        } );
-
-        this.app.put( '/api', (req, res) => {
-            res.status(400).json( {
-                msj: 'put API'
-            } );
-        } );
-
-        this.app.post( '/api', (req, res) => {
-            res.status(201).json( {
-                msj: 'post API'
-            } );
-        } );
-
-        this.app.delete( '/api', (req, res) => {
-            res.json( {
-                msj: 'delete API'
-            } );
-        } );
+        this.app.use( '/api/users', require('../routes/user') );
     }
 
     listen(){
