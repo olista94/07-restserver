@@ -24,6 +24,12 @@ const usuariosPost = async(req, res) => {
     const usuario = new Usuario( { nombre, correo, password, rol } );
 
     // Verificar si correo existe
+    const existeMail = await Usuario.findOne( { correo } );
+    if ( existeMail ){
+        return res.status(400).json( {
+            msg: 'Ese correo ya esta registrado'
+        } );
+    }
 
     // Encriptar contraseña
     const salt = bcryptjs.genSaltSync(); // Vueltas de encriptacion hash (por defecto son 10)
