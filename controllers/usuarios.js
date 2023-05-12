@@ -18,18 +18,11 @@ const usuariosGet = (req = request, res = response) => {
     } );
 }
 
+// Crear usuarios
 const usuariosPost = async(req, res) => {
     
     const { nombre, correo, password, rol } = req.body;
     const usuario = new Usuario( { nombre, correo, password, rol } );
-
-    // Verificar si correo existe
-    const existeMail = await Usuario.findOne( { correo } );
-    if ( existeMail ){
-        return res.status(400).json( {
-            msg: 'Ese correo ya esta registrado'
-        } );
-    }
 
     // Encriptar contraseña
     const salt = bcryptjs.genSaltSync(); // Vueltas de encriptacion hash (por defecto son 10)
@@ -43,13 +36,24 @@ const usuariosPost = async(req, res) => {
     } );
 }
 
-const usuariosPut = (req, res) => {
+// Editar usuarios
+const usuariosPut = async(req, res) => {
 
-    const id = req.params.id;
+    const { id } = req.params;
+    const { _id, password, google, correo, ...resto } = req.body;
+
+    // TODO validar contra BD
+    if ( password ) {
+         // Encriptar contraseña
+        const salt = bcryptjs.genSaltSync(); // Vueltas de encriptacion hash (por defecto son 10)
+        resto.password = bcryptjs.hashSync( password, salt );
+    }
+
+    const usuario = await Usuario.findByIdAndUpdate( id, resto );
 
     res.json( {
         msj: 'put API - usuariosPut',
-        id
+        usuario
     } );
 }
 
