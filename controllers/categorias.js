@@ -35,7 +35,7 @@ const crearCategoria = async (req, res = response) => {
 
     const nombre = req.body.nombre.toUpperCase();
 
-    const categoriaDB = await Categorta.findOne( { nombre } );
+    const categoriaDB = await Categoria.findOne( { nombre } );
 
     if ( categoriaDB ) {
         return res.status(400).json( {
@@ -49,7 +49,7 @@ const crearCategoria = async (req, res = response) => {
         usuario: req.usuario._id
     }
 
-    const categoria = new Categorta( data );
+    const categoria = new Categoria( data );
 
     // Guardar DB
     await categoria.save();
