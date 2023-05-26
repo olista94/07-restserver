@@ -1,6 +1,8 @@
 
 const path = require('path');
 
+const { v4: uuidv4 } = require('uuid');
+
 const { response } = require("express");
 
 const cargarArchivo = (req, res = response) => {
@@ -10,16 +12,30 @@ const cargarArchivo = (req, res = response) => {
       return res.status(400).send( 'No hay archivos que subir' );
     }
 
-    // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
     const { archivo } = req.files;
 
-    const uploadPath = path.join( __dirname, '../uploads/', archivo.name );
+    const nombreCortado = archivo.name.split('.');
 
+    const extension = nombreCortado[ nombreCortado.length - 1 ];
+
+    // Validar extension
+    const extensionesValidas = ['png','jpg','jpeg','gif'].join(', ');
+
+    if ( !extensionesValidas.includes( extension.toLowerCase() ) ) {
+        return res.status(400).json( {
+            msg: `La extensión ${ extension } no está permitida. Estas son las válidas: ${ extensionesValidas }`
+        } )
+    }
+
+    const nombreTemp = uuidv4() + '.' + extension;
+
+    const uploadPath = path.join( __dirname, '../uploads/', nombreTemp );
+    
     // Use the mv() method to place the file somewhere on your server
     archivo.mv( uploadPath, ( err ) => {
       if ( err )        
         return res.status(500).json( { err } );
-
+    
       res.json( {msg: 'Archivo subido a ' + uploadPath} );
     } );
 }
