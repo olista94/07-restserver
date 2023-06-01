@@ -53,10 +53,25 @@ const existeProductoPorId = async( id ) => {
     }
 }
 
+/**
+ * Validar colecciones permitidas
+ */
+
+const coleccionesPerminitas = ( coleccion = '', colecciones = [] ) => {
+
+    const includa = colecciones.includes( coleccion );
+    if( !includa ) {
+        throw new Error( `La copleccion ${ coleccion } no es permitida. Estan permitidas: ${ colecciones.join(', ') }` );
+    }
+
+    return true;
+}
+
 module.exports = {
     esRolValido, 
     emailExiste,
     idUsuarioExiste, 
     existeCategoriaPorId,
-    existeProductoPorId
+    existeProductoPorId,
+    coleccionesPerminitas
 }
